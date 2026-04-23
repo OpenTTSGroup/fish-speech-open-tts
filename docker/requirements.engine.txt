@@ -1,0 +1,7 @@
+# Extras beyond what `pip install /build/engine` pulls in automatically.
+# fish-speech's own pyproject.toml already ships transformers, librosa,
+# descript-audio-codec, lightning, loguru, ormsgpack and everything else
+# required at inference time — we only need to add HuggingFace download
+# accelerators here.
+huggingface_hub>=0.24
+hf_transfer>=0.1.6

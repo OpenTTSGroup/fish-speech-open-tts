@@ -1,0 +1,34 @@
+services:
+  fish-speech:
+    image: ghcr.io/openttsgroup/fish-speech-open-tts:latest
+    container_name: fish-speech-open-tts
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./voices:/voices:ro
+      - ./cache:/root/.cache
+    environment:
+      FISHSPEECH_MODEL: "fishaudio/s2-pro"
+      FISHSPEECH_DTYPE: "bfloat16"
+      LOG_LEVEL: "info"
+      # Weight-only quantization (CUDA only):
+      # FISHSPEECH_QUANTIZATION: "int8"
+      # Override max context length (tokens):
+      # FISHSPEECH_MAX_SEQ_LEN: "2560"
+      # Warm-up target length (0 disables warm-up):
+      # FISHSPEECH_WARMUP_TOKENS: "128"
+      # torch.compile the LLaMA forward (slower first call, faster steady state):
+      # FISHSPEECH_COMPILE: "true"
+      # Allow browsers to call the API from any origin:
+      # CORS_ENABLED: "true"
+      # Fall back to CPU on a host without NVIDIA drivers:
+      # FISHSPEECH_DEVICE: "cpu"
+      # FISHSPEECH_DTYPE: "float32"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
